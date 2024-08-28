@@ -120,7 +120,15 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+      persistentFooterButtons: [
+        ElevatedButton(
+          onPressed: _incrementCounter, 
+          child: Icon(Icons.ac_unit_outlined)),
+        ElevatedButton(
+          onPressed: _incrementCounter, 
+          child: Icon(Icons.headphones))
+      ], // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
