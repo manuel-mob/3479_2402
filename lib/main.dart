@@ -60,6 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
      var logger = Logger();
       logger.d("Logger is working!");
+      String svg = 'assets/icons/211668_game_icon.svg';
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -105,9 +106,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       SvgPicture.asset('assets/icons/293657_x_icon.svg'),
                       SizedBox(width: 20,),
                       SvgPicture.asset('assets/icons/293667_circle_icon.svg'),
+                      SizedBox(width:20,),
+                      SvgPicture.asset(svg,
+                      semanticsLabel: 'Game',
+                      width: 40),
                   ],
                   ),
               ),
+            ),
+            SvgPicture.asset(
+              'assets/icons/211668_game_icon.svg',
+              semanticsLabel: 'Acme Logo'
             ),
             const Text(
               'You have pushed the button this many times:',
