@@ -8,7 +8,13 @@ class AboutApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('Card Sample')),
-        body: const Text("About"),
+        body: Center(child: Column(
+          children: [
+            const Text("About"),
+            Image.network(
+    'https://docs.flutter.dev/assets/images/dash/dash-fainting.gif')
+          ],
+        )),
       ),
     );
   }

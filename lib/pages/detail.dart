@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-
+import '../models/recipe.dart';
 class DetailApp extends StatelessWidget {
+
+  
   const DetailApp({super.key});
 
   @override
