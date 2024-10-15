@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:laboratorio_prueba/pages/audit.dart';
+import 'package:laboratorio_prueba/pages/preference.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/appprovider.dart';
 import '../models/recipe.dart';
@@ -26,6 +28,9 @@ class MyHomePage extends StatefulWidget {
 }
 class _MyHomePageState extends State<MyHomePage> {
   String message = '';
+  String welcome_message = 'Hola';
+  int _counter = 0;
+  String _userName = '';
 
   @override 
   void initState() {
@@ -33,8 +38,34 @@ class _MyHomePageState extends State<MyHomePage> {
     var logger = Logger();
     logger.d("initState() called.");
     message = "Hello World!";
+    _loadPreferences();
   }
 
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _counter = prefs.getInt('counter') ?? 0;
+      _userName = prefs.getString('userName') ?? '';
+      if (_userName != '') {
+        welcome_message = 'Hola $_userName';
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    var logger = Logger();
+    logger.d("dispose() called.");
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadPreferences();
+     var logger = Logger();
+    logger.d("didChangeDependencies() called.");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +158,21 @@ class _MyHomePageState extends State<MyHomePage> {
           
         },
       ),
+            ListTile(
+        title: const Text('Preferences'),
+        onTap: () {
+          // Update the state of the app.
+          // ...
+             Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PreferenceApp()
+            )
+          ).then((_) {
+            _loadPreferences();
+          });
+          
+        },
+      ),
     ],
   ),
 );
@@ -164,11 +210,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 Text(
+                  welcome_message,
+                ),
+                Text(
                   message,
                 ),
                 Text(
                   //' ${appData.counter}',
-                 '${context.read<AppData>().counter}', 
+                 //'${context.read<AppData>().counter}', 
+                  '$_counter',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 Text("Nuevo texto",
