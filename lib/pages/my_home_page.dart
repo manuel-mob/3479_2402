@@ -1,11 +1,18 @@
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:laboratorio_prueba/pages/audit.dart';
+import 'package:laboratorio_prueba/models/posts.dart';
+import 'package:laboratorio_prueba/pages/audit_screen.dart';
+import 'package:laboratorio_prueba/pages/camera.dart';
+import 'package:laboratorio_prueba/pages/feriado_list.dart';
 import 'package:laboratorio_prueba/pages/preference.dart';
+import 'package:laboratorio_prueba/pages/send.dart';
+import 'package:laboratorio_prueba/pages/wifi_analytics.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../models/appprovider.dart';
 import '../models/recipe.dart';
 import 'about.dart';
@@ -16,10 +23,7 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
 
-  //@override
-  //State<MyHomePage> createState() => _MyHomePageState();
   @override
-  // ignore: no_logic_in_create_state
   State<MyHomePage> createState() {
     var logger = Logger();
     logger.d("create state");
@@ -31,6 +35,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String welcome_message = 'Hola';
   int _counter = 0;
   String _userName = '';
+  late CameraDescription firstCamera;
+  List<String> _savedImages = [];
 
   @override 
   void initState() {
@@ -39,19 +45,31 @@ class _MyHomePageState extends State<MyHomePage> {
     logger.d("initState() called.");
     message = "Hello World!";
     _loadPreferences();
+    loadCamera();
   }
 
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
+    final savedImages = prefs.getStringList('saved_images') ?? [];
     setState(() {
       _counter = prefs.getInt('counter') ?? 0;
       _userName = prefs.getString('userName') ?? '';
       if (_userName != '') {
         welcome_message = 'Hola $_userName';
       }
+      _savedImages = savedImages;
     });
+
+    
   }
 
+  Future<void> loadCamera() async {
+    final cameras = await availableCameras();
+    setState(() {
+      firstCamera = cameras.first;
+    });    
+  }
+  
   @override
   void dispose() {
     super.dispose();
@@ -67,25 +85,30 @@ class _MyHomePageState extends State<MyHomePage> {
     logger.d("didChangeDependencies() called.");
   }
 
+  void _openFile(String filepath) async {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('Could not launch $filepath'),
+    ),
+  );
+}
+
   @override
   Widget build(BuildContext context) {
      var logger = Logger();
       logger.d("Logger is working!");
       final appData = context.watch<AppData>();
-
       String svg = 'assets/icons/211668_game_icon.svg';
-
-    var drawer = Drawer(
-  child: ListView(
-    // Important: Remove any padding from the ListView.
-    padding: EdgeInsets.zero,
-    children: [
-      const DrawerHeader(
-        decoration: BoxDecoration(
-          color: Colors.blue,
-        ),
-        child: Text('Drawer Header'),
+   
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
       ),
+      drawer: Drawer(
+        elevation: 8.0,
+        
+  child: ListView(
+    children: [
       ListTile(
         title: const Text('Mis Receptas'),
         onTap: () {
@@ -153,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // ...
              Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Audit()),
+            MaterialPageRoute(builder: (context) => AuditScreen()),
           );
           
         },
@@ -173,14 +196,59 @@ class _MyHomePageState extends State<MyHomePage> {
           
         },
       ),
+      ListTile(
+        title: const Text('Send Share Plus'),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SendPage()),
+          );
+        },
+      ),
+      ListTile(
+        title: const Text('Camera Example'),
+        onTap: () {
+          
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CameraScreen(camera: firstCamera)),
+          );
+        },
+      ),
+      // ListTile for Wifi Analytics
+      ListTile(
+        title: const Text('Wifi Analytics'),
+        onTap: () {
+          // Update the state of the app.
+          // ...
+             Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => WifiAnalytics()),
+          );
+          
+        },
+      ),
+      ListTile(
+        title: const Text('Posts'),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PostListScreen()),
+          );
+        },
+      ),
+      ListTile(
+        title: const Text('Feriados'),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => FeriadoListScreen()),
+          );
+        },
+      ),
     ],
   ),
-);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      drawer: drawer,
+),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -225,6 +293,30 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),)
+                ,Column(
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        _openFile(_savedImages[_counter % _savedImages.length]);
+                      },
+                      child: Text(
+                        _savedImages.isNotEmpty
+                            ? "Ver imagen"
+                            : 'No images available',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    if (_savedImages.isNotEmpty)
+                      Container(
+                        width: 100,
+                        height: 100,
+                        child: Image.file(
+                          File(_savedImages[_counter % _savedImages.length]),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                  ],
+                ),
               ],
             ),
           ),

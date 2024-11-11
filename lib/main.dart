@@ -5,8 +5,16 @@ import 'package:laboratorio_prueba/pages/my_home_page.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
+import 'dart:async';
+
+import 'package:flutter/widgets.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+
 
 void main() {
+
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

@@ -19,15 +19,14 @@ class _PreferenceAppState extends State<PreferenceApp> {
   }
 
     Future<void> _loadPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _userName = prefs.getString('userName') ?? '';
-      _counter = prefs.getInt('counter') ?? 0;
-      print('Counter value $_counter is loaded');
-      print('Username value $_userName is loaded');
-    });
-
-  }
+      final prefs = await SharedPreferences.getInstance();
+      setState(() {
+        _userName = prefs.getString('userName') ?? '';
+        _counter = prefs.getInt('counter') ?? 0;
+        print('Counter value $_counter is loaded');
+        print('Username value $_userName is loaded');
+      });
+    }
 
   Future<void> _savePreferences() async {
     final prefs = await SharedPreferences.getInstance();
