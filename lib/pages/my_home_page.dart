@@ -7,8 +7,10 @@ import 'package:laboratorio_prueba/models/posts.dart';
 import 'package:laboratorio_prueba/pages/audit_screen.dart';
 import 'package:laboratorio_prueba/pages/camera.dart';
 import 'package:laboratorio_prueba/pages/feriado_list.dart';
+import 'package:laboratorio_prueba/pages/list_species.dart';
 import 'package:laboratorio_prueba/pages/preference.dart';
 import 'package:laboratorio_prueba/pages/send.dart';
+import 'package:laboratorio_prueba/pages/web_view_app.dart';
 import 'package:laboratorio_prueba/pages/wifi_analytics.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -243,6 +245,24 @@ class _MyHomePageState extends State<MyHomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => FeriadoListScreen()),
+          );
+        },
+      ),
+      ListTile(
+        title: const Text('Star Wars'),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SpeciesListScreen()),
+          );
+        },
+      ),
+      ListTile(
+        title: const Text('WebView'),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => WebViewApp()),
           );
         },
       ),

@@ -5,13 +5,6 @@ import 'package:laboratorio_prueba/pages/my_home_page.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
-import 'dart:async';
-
-import 'package:flutter/widgets.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
-
-
 void main() {
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,14 +32,6 @@ class MyApp extends StatelessWidget {
       ),
     );
 
-    // return MaterialApp(
-    //   title: 'Flutter Demo',
-    //   theme: ThemeData.light(useMaterial3: true),
-    //   home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    //   //home: const AboutApp(),
-    //   //home: const DetailApp()
-    //   //home: RecipeListScreen(recipes: recipes),
-    // );
   }
 }
 
